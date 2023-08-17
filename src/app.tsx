@@ -16,7 +16,7 @@ function App() {
         <ConfigProvider
             theme={{ algorithm: isDarkMode ? darkAlgorithm : defaultAlgorithm }}
         >
-            <div className={clsx("flex flex-col justify-center p-4 ", isDarkMode ? "bg-[#212121]" : "bg-gray-100")}>
+            <div className={clsx("flex flex-col p-4 h-full", isDarkMode ? "bg-[#212121]" : "bg-gray-100")}>
                 <PageHeader handleThemeChange={handleThemeChange}/>
                 <div className="px-4">
                     <AgoraDatatable/>

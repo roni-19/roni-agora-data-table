@@ -8,6 +8,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  height: 100vh;
 }
 
 code {
@@ -17,6 +18,10 @@ code {
 
 .ant-switch-checked {
   background-color: #9b4949 !important;
+}
+
+#root {
+  height: 100%
 }
 
 
