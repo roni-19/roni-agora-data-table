@@ -9,14 +9,16 @@ import { dayjs } from "../initializers/dayjs";
 export const NumericFilter = (dataIndex: keyof DataType, step=1) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }: FilterDropdownProps) => {
         const maxValue = Math.max(...data.map(movie => movie[dataIndex] as number))
+        const minValue = Math.min(...data.map(movie => movie[dataIndex] as number))
         return (
             <div className="p-3">
                 <Slider
                     range
                     max={maxValue}
-                    value={selectedKeys[0] ? JSON.parse(selectedKeys[0] as string) : [0, maxValue]}
+                    min={minValue}
+                    value={selectedKeys[0] ? JSON.parse(selectedKeys[0] as string) : [minValue, maxValue]}
                     onChange={value => setSelectedKeys([JSON.stringify(value)] ?? [])}
-                    marks={{ 0: '0', [maxValue]: maxValue }}
+                    marks={{ [minValue]: minValue, [maxValue]: maxValue }}
                     step={step}
                 />
                 <Button
@@ -43,14 +45,16 @@ export const NumericFilter = (dataIndex: keyof DataType, step=1) => ({
 export const CurrencyFilter = (dataIndex: keyof DataType) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }: FilterDropdownProps) => {
         const maxValue = Math.max(...data.map(movie => movie[dataIndex] as number))
+        const minValue = Math.min(...data.map(movie => movie[dataIndex] as number))
         return (
             <div className="py-2 px-8">
                 <Slider
                     range
+                    min={minValue}
                     max={maxValue}
-                    value={selectedKeys[0] ? JSON.parse(selectedKeys[0] as string) : [0, maxValue]}
+                    value={selectedKeys[0] ? JSON.parse(selectedKeys[0] as string) : [minValue, maxValue]}
                     onChange={value => setSelectedKeys([JSON.stringify(value)] ?? [])}
-                    marks={{ 0: '0', [maxValue]: currencyFormatter.format(maxValue) }}
+                    marks={{ [minValue]: currencyFormatter.format(minValue), [maxValue]: currencyFormatter.format(maxValue) }}
                     className="w-[100px]"
                     tooltip={{formatter: value => currencyFormatter.format(value as number)}}
                 />
