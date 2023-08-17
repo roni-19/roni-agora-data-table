@@ -13,6 +13,7 @@
     "@types/react-dom": "^18.0.0",
     "@types/react-resizable": "^3.0.4",
     "antd": "^5.8.3",
+    "clsx": "^2.0.0",
     "dayjs": "^1.11.9",
     "lodash": "^4.17.21",
     "react": "^18.2.0",

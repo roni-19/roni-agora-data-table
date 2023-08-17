@@ -1,15 +1,29 @@
-import React from 'react';
+import React from "react";
 import AgoraDatatable from "./componenets/agora-datatable";
-import Header from "./componenets/header";
+import PageHeader from "./componenets/page-header";
+import { useState } from "react";
+import { ConfigProvider, theme } from "antd";
+import clsx from "clsx";
+
 function App() {
-  return (
-      <div className={"flex flex-col justify-center p-4 bg-gray-100"}>
-          <Header/>
-          <div className="px-4">
-            <AgoraDatatable/>
-          </div>
-    </div>
-  );
+    const { defaultAlgorithm, darkAlgorithm } = theme;
+    const [isDarkMode, setIsDarkMode] = useState(false);
+    const handleThemeChange = () => {
+        setIsDarkMode((previousValue) => !previousValue);
+    };
+
+    return (
+        <ConfigProvider
+            theme={{ algorithm: isDarkMode ? darkAlgorithm : defaultAlgorithm }}
+        >
+            <div className={clsx("flex flex-col justify-center p-4 ", isDarkMode ? "bg-[#212121]" : "bg-gray-100")}>
+                <PageHeader handleThemeChange={handleThemeChange}/>
+                <div className="px-4">
+                    <AgoraDatatable/>
+                </div>
+            </div>
+        </ConfigProvider>
+    );
 }
 
 export default App;

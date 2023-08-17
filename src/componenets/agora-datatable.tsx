@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Table, TableProps } from "antd";
+import { Button, Table, TableProps, Typography } from "antd";
 import type { ColumnsType, ColumnType } from "antd/es/table";
 import type { ResizeCallbackData } from "react-resizable";
 import "../datatable.css";
@@ -65,7 +65,7 @@ export default function AgoraDatatable() {
             render: (value) => <ImdbRank rank={value}/>
         },
         {
-            title: "Movie Duration (m)",
+            title: "Movie Duration",
             dataIndex: "movie_duration",
             ...NumericFilter("movie_duration"),
             filteredValue: filters.movie_duration || null,
@@ -73,7 +73,7 @@ export default function AgoraDatatable() {
             width: 100,
             render: value => {
                 const hours = Math.floor(value / 60);
-                const minutes = value % 6
+                const minutes = value % 60
                 return dayjs.duration({ minutes, hours }).format("HH:mm")
             }
         },
@@ -172,7 +172,7 @@ export default function AgoraDatatable() {
     return (
         <div className="flex flex-col gap-2 py-4">
             <div className="flex items-center gap-4">
-                <div>Total of {numOfRows} movies</div>
+                <Typography.Text>Total of {numOfRows} movies</Typography.Text>
                 <Button onClick={clearFilters} disabled={Object.keys(filters).length===0}>Clear Filters</Button>
             </div>
             <Table
