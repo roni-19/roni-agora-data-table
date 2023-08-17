@@ -1,27 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Table, DatePicker, TableProps } from 'antd';
-import type { ColumnsType, ColumnType } from 'antd/es/table';
-import type { ResizeCallbackData } from 'react-resizable';
-import '../datatable.css';
+import React, { useState } from "react";
+import { Button, Table, TableProps } from "antd";
+import type { ColumnsType, ColumnType } from "antd/es/table";
+import type { ResizeCallbackData } from "react-resizable";
+import "../datatable.css";
 import ResizableTitle from "./resizable-title";
 import { dayjs } from "../initializers/dayjs";
 import { data } from "../data";
 import { uniq } from "lodash";
 import { DataType } from "../types";
-import { CurrencyFilter, NumericFilter } from "./filters";
+import { CurrencyFilter, DateFilter, NumericFilter } from "./filters";
 import { currencyFormatter } from "../utils/formatters";
 import { FilterValue } from "antd/es/table/interface";
-import TomatoMeter from "./tomato-meter";
-import { StarIcon } from "@heroicons/react/24/solid";
+import { ImdbRank, TomatoMeter } from "./cells";
 
 export default function AgoraDatatable() {
     const [filters, setFilters] = useState<Record<string, FilterValue | null>>({});
     const [numOfRows, setNumOfRows] = useState<number>(data.length)
-    console.log("filters but from here",filters)
+
     const initialColumns: ColumnsType<DataType> = [
         {
-            title: 'Movie Title',
-            dataIndex: 'movie_title',
+            title: "Movie Title",
+            dataIndex: "movie_title",
             filters: data.map(({ movie_title }) => ({ text: movie_title, value: movie_title })),
             onFilter: (value: string | boolean | number, record) => record.movie_title === value,
             filterSearch: true,
@@ -31,8 +30,8 @@ export default function AgoraDatatable() {
             render: (value, record) => <a href={record.link} className="font-bold">{value}</a>
         },
         {
-            title: 'MCU Phase',
-            dataIndex: 'mcu_phase',
+            title: "MCU Phase",
+            dataIndex: "mcu_phase",
             sorter: (a, b) => a.mcu_phase - b.mcu_phase,
             width: 50,
             filters: uniq(data.map(({ mcu_phase }) => mcu_phase)).map(phase => ({ text: phase, value: phase })),
@@ -40,41 +39,16 @@ export default function AgoraDatatable() {
             filteredValue: filters.mcu_phase || null,
         },
         {
-            title: 'Release Date',
-            dataIndex: 'release_date',
+            title: "Release Date",
+            dataIndex: "release_date",
             width: 100,
             sorter: (a, b) => dayjs(a.release_date).isAfter(dayjs(b.release_date)) ? 1 : -1,
-            filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => {
-                return (
-                    <div className="p-3 flex flex-col gap-2">
-                        <DatePicker.RangePicker
-                            value={selectedKeys[0] ? JSON.parse(selectedKeys[0] as string).map((date: string) => dayjs(date)) : null}
-                            onChange={value => setSelectedKeys(value ? [JSON.stringify(value)] : [])}
-                        />
-                        <Button
-                            className="bg-blue-600"
-                            type="primary"
-                            block
-                            size="small"
-                            onClick={() => {
-                                confirm()
-                            }}
-                        >
-                            Confirm
-                        </Button>
-                    </div>
-                )
-            },
-            onFilter: (value: string | boolean | number, { release_date }) => {
-                const range = JSON.parse(value as string)
-                console.log(dayjs(range[0]), dayjs(range[1]))
-                return dayjs(release_date).isBetween(dayjs(range[0]), dayjs(range[1]));
-            },
+            ...DateFilter("release_date"),
             filteredValue: filters.release_date || null,
         },
         {
-            title: 'Tomato Meter',
-            dataIndex: 'tomato_meter',
+            title: "Tomato Meter",
+            dataIndex: "tomato_meter",
             width: 140,
             ...NumericFilter("tomato_meter"),
             filteredValue: filters.tomato_meter || null,
@@ -82,17 +56,17 @@ export default function AgoraDatatable() {
             render: (value) => <TomatoMeter value={value}/>
         },
         {
-            title: 'IMDB Rank',
-            dataIndex: 'imdb',
+            title: "IMDB Rank",
+            dataIndex: "imdb",
             width: 140,
-            ...NumericFilter("imdb"),
+            ...NumericFilter("imdb", 0.1),
             filteredValue: filters.imdb || null,
             sorter: (a, b) => a.imdb - b.imdb,
-            render: (value) => <div className="flex gap-2"><StarIcon className="w-5 h-5 text-amber-300"></StarIcon><div>{value}</div></div>
+            render: (value) => <ImdbRank rank={value}/>
         },
         {
-            title: 'Movie Duration (m)',
-            dataIndex: 'movie_duration',
+            title: "Movie Duration (m)",
+            dataIndex: "movie_duration",
             ...NumericFilter("movie_duration"),
             filteredValue: filters.movie_duration || null,
             sorter: (a, b) => a.movie_duration - b.movie_duration,
@@ -104,8 +78,8 @@ export default function AgoraDatatable() {
             }
         },
         {
-            title: 'Production Budget',
-            dataIndex: 'production_budget',
+            title: "Production Budget",
+            dataIndex: "production_budget",
             render: value => currencyFormatter.format(value),
             ...CurrencyFilter("production_budget"),
             filteredValue: filters.production_budget || null,
@@ -113,8 +87,8 @@ export default function AgoraDatatable() {
             width: 100,
         },
         {
-            title: 'Opening Weekend',
-            dataIndex: 'opening_weekend',
+            title: "Opening Weekend",
+            dataIndex: "opening_weekend",
             render: value => currencyFormatter.format(value),
             ...CurrencyFilter("opening_weekend"),
             filteredValue: filters.opening_weekend || null,
@@ -122,8 +96,8 @@ export default function AgoraDatatable() {
             width: 100
         },
         {
-            title: 'Domestic Box Office',
-            dataIndex: 'domestic_box_office',
+            title: "Domestic Box Office",
+            dataIndex: "domestic_box_office",
             render: value => currencyFormatter.format(value),
             ...CurrencyFilter("domestic_box_office"),
             filteredValue: filters.domestic_box_office || null,
@@ -132,8 +106,8 @@ export default function AgoraDatatable() {
 
         },
         {
-            title: 'Worldwide Box Office',
-            dataIndex: 'worldwide_box_office',
+            title: "Worldwide Box Office",
+            dataIndex: "worldwide_box_office",
             ...CurrencyFilter("worldwide_box_office"),
             filteredValue: filters.worldwide_box_office || null,
             sorter: (a, b) => a.worldwide_box_office - b.worldwide_box_office,
@@ -190,7 +164,7 @@ export default function AgoraDatatable() {
         setFilters({});
         setNumOfRows(data.length)
     };
-    const handleChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter, extra) => {
+    const handleChange: TableProps<DataType>["onChange"] = (pagination, filters, sorter, extra) => {
         setFilters(filters);
         setNumOfRows(extra.currentDataSource.length)
     };
