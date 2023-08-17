@@ -58,7 +58,7 @@ export default function AgoraDatatable() {
         {
             title: "IMDB Rank",
             dataIndex: "imdb",
-            width: 140,
+            width: 100,
             ...NumericFilter("imdb", 0.1),
             filteredValue: filters.imdb || null,
             sorter: (a, b) => a.imdb - b.imdb,
@@ -173,7 +173,7 @@ export default function AgoraDatatable() {
         <div className="flex flex-col gap-2 py-4">
             <div className="flex items-center gap-4">
                 <div>Total of {numOfRows} movies</div>
-                <Button onClick={clearFilters}>Clear Filters</Button>
+                <Button onClick={clearFilters} disabled={Object.keys(filters).length===0}>Clear Filters</Button>
             </div>
             <Table
                 bordered

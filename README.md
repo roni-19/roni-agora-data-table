@@ -1,4 +1,5 @@
-![alt text](public/marvel-logo-transparent.png)
+<img src="public/marvel-logo-transparent.png" alt="drawing" width="200"/>
+
 # Marvel Cinematic Universe Movies Web Page
 
 Welcome to the Marvel Cinematic Universe Movies Web Page repository!
